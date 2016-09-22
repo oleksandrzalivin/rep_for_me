@@ -1,24 +1,34 @@
+<!----------------------------------------------- 
+Головна сторінка сайту з продажі свіжих продуктів
+ ----------------------------------------------->
 <!DOCTYPE html">
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta charset="utf-8" />
 		<title>Продукти</title>
-		<link type="text/css" rel="stylesheet" href="stylesheet/stylesheet.css"/>
+		<link type="text/css" rel="stylesheet" href="stylesheets/stylesheet.css" />
+		<link rel="icon" href="images/ico.jpg" />
 	</head>
 	<body >
 		<div id="top"> 
 			<h1><a id="a_" href="index.html">Живі продукти</a></h1>
 			<div>
-				<img src="http://telegraf.com.ua/files/2013/02/frukty1.jpg" />
-				<img src="http://frut-r.ru/img/92.jpg" />
-				<img src="http://elramd.com/wp-content/uploads/2013/01/specii.jpg" />
+				<img id="_1_" src="images/title_1.jpg" alt="Фото фруктів" title="Відбірні, соковиті" />
+				<img id="_2_" src="images/title_2.jpg" alt="Photo"        title="title" />
+				<img id="_3_" src="images/title_3.jpg" />
 			</div>
 		</div>
 		<div class="cont">
-			<table id="tab_1">
+			<div id="bar">
+				<a href=""><div>option 1</div></a>
+				<a href=""><div>option 2</div></a>
+				<a href=""><div>option 3</div></a>
+				<a href=""><div>option 4</div></a>
+			</div>
+			<table id="tab_1"> <!-- Таблиця фруктів -->
 				<thead>
 					<tr>
-					<th colspan="7"> <a href="fruit.html">Фрукти</a></th>
+						<th colspan="7"><a href="fruit.html">Фрукти</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -33,7 +43,7 @@
 					</tr>
 					<tr>
 						<td>001</td>
-						<td><img src="http://yablooko.com.ua/image/cache/data/Slajder/applelogo-182x182.jpg" /></td>
+						<td><img src="images/aple.jpg" /></td>
 						<td>Яблука</td>
 						<td>"Піонер"</td>
 						<td>2016</td>
@@ -42,7 +52,7 @@
 					</tr>
 					<tr>
 						<td>002</td>
-						<td><img src="https://freelance.ru/img/portfolio/pics/00/10/A0/1089561.jpg" /></td>
+						<td><img src="images/pear.jpg" /></td>
 						<td>Груші</td>
 						<td>"Бера"</td>
 						<td>2015</td>
@@ -51,7 +61,7 @@
 					</tr>
 					<tr>
 						<td>003</td>
-						<td><img src="http://www.divosad.com.ua/photos/small/persik-sagdiec-11003825.jpg" /></td>
+						<td><img src="images/pers.jpg" /></td>
 						<td>Персики</td>
 						<td>"Вахтанг"</td>
 						<td>2016</td>
@@ -60,10 +70,10 @@
 					</tr>
 				</tbody>
 			</table>
-			<table id="tab_2">
+			<table id="tab_2"> <!-- Таблиця овочів -->
 				<thead>
 					<tr>
-					<th colspan="7"> <a href="vegetable.html">Овочі</a></th>
+						<th colspan="7"><a href="vegetable.html">Овочі</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -78,7 +88,7 @@
 					</tr>
 					<tr>
 						<td>011</td>
-						<td><img src="http://www.menu.ck.ua/wp-content/uploads/pomidor.jpg" /></td>
+						<td><img src="images/tomat.jpg" /></td>
 						<td>Помідори</td>
 						<td>"Богатир"</td>
 						<td>2016</td>
@@ -87,7 +97,7 @@
 					</tr>
 					<tr>
 						<td>012</td>
-						<td><img src="http://hovrashok.com.ua/images/Jan/08/254eece17a4b1510013ab360d79da392/mini_1.jpg" /></td>
+						<td><img src="images/ogir.jpg" /></td>
 						<td>Огірки</td>
 						<td>"Альфа"</td>
 						<td>2015</td>
@@ -96,7 +106,7 @@
 					</tr>
 					<tr>
 						<td>013</td>
-						<td><img src="http://kazka-ua.info/wp-content/uploads/2014/09/1397744855-kartofel.jpg" /></td>
+						<td><img src="images/potato.jpg" /></td>
 						<td>Картопля</td>
 						<td>"Сова"</td>
 						<td>2016</td>
@@ -105,10 +115,10 @@
 					</tr>
 				</tbody>
 			</table>
-			<table id="tab_3">
+			<table id="tab_3"> <!-- Таблиця спецій -->
 				<thead>
 					<tr>
-					<th colspan="7"> <a  href="spice.html"> Спеції </a></th>
+						<th colspan="7"> <a  href="spice.html">Спеції</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -122,7 +132,7 @@
 					</tr>
 					<tr>
 						<td>021</td>
-						<td><img src="http://healthharbor.ru/_mod_files/ce_images/poleznie-produkti/kardamon-polza.jpg" /></td>
+						<td><img src="images/kardam.jpg" /></td>
 						<td>Кардамон</td>
 						<td>2016</td>
 						<td>2017</td>
@@ -130,7 +140,7 @@
 					</tr>
 					<tr>
 						<td>022</td>
-						<td><img src="http://shop.laroma.com.ua/image/cache/data/%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B8/%D0%B0%D1%81%D0%B0%D1%84%D0%B5%D1%82%D0%B8%D0%B4%D0%B0-281x281.png" /></td>
+						<td><img src="images/asafet.jpg" /></td>
 						<td>Асафетида</td>
 						<td>2015</td>
 						<td>2016</td>
@@ -138,7 +148,7 @@
 					</tr>
 					<tr>
 						<td>023</td>
-						<td><img src="http://www.satvaom.ru/files/products/spices/kurkuma-molotaya-20-g.jpg" /></td>
+						<td><img src="images/kurkum.jpg" /></td>
 						<td>Куркума</td>
 						<td>2016</td>
 						<td>2017</td>
