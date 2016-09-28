@@ -7,6 +7,7 @@ body {
 	background-position: top;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
+	border-radius: 5px;
 }
 
 div {
@@ -20,10 +21,14 @@ div {
 	margin: auto;                         /* Align of the 'div' don`t work! ---???--- */
 	width:100%;
 	height:320px;
+	border-radius: 7px;
+	margin: 1px;
+	background-color: #ccff33;
 }
 #top div img {
-	height: 220px;
+	height: auto;
 	border: 2px solid blue;
+	border-radius: 7px;
 	margin: 1px;
 }
 #top div {
@@ -41,41 +46,35 @@ div {
 }
 .cont { /*  The block with all tables */
 	background-color: #38AD5D;
-	
+	margin: 10px;
+	padding: 5px;
+	border-radius: 7px;
 }
  td {
 	text-align: center;
 	border:1px black solid;
 	font-family: arial, serif;
+	padding: 3px;
 	
 }
 table {
 	text-align: center;
 	border:1px #0FA0AE solid;
+	border-radius: 7px;
 	font-family: arial, serif;
+	background-color: #d9ff66;
 }
-#tab_1 {
-	margin:2em;
-}
-#tab_1 th {
+
+th {
 	background-color:#9AAD38;
 	font-size:2em;
 	font-family:Georgia, arial;
 }
-#tab_2 th {
-	background-color:#219FA6;
-	font-size:1.5em;
-	font-family:Verdana, arial;
+#tab_1 {
+	margin:2em;
 }
-#tab_3 th {
-	background-color:#103C13;
-	font-size:1.5em;
-	font-family: Georgia, arial;
-	
-}
-
 #tab_2 {
-	margin:auto;
+	margin:2em;
 }
 #tab_3 {
 	margin:2em;
@@ -95,15 +94,23 @@ a:hover {
 #bar {
 	margin-right: 25px;
 	margin-top: 5px;
-	height: 1000px;
-	width: 200px;
+	margin-left: 5px;
+	height: 1100px;
+	width: 400px;
 	border: 2px dashed green;
+	border-radius: 8px;
 	float: right;
 	background-color: #BE9D3C ;
 }
 #bar div {
-	height:200px;
-	background-color: green;
+	height:230px;
+	background-color: #ace600;
 	margin: 15px;
 	border-radius: 20px;
+}
+p {
+	margin: 5px;
+}
+h2 {
+	text-align: center;
 }
