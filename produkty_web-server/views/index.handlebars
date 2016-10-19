@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div id="top"> 
-			<h1><a id="a_" href="index.html">Живі продукти</a></h1>
+			<h1><a id="a_" href="see">Живі продукти</a></h1>
 			<div>
 				<img id="_1_" src="images/title_1.jpg" alt="Фото фруктів" title="Відбірні, соковиті" />
 				<img id="_2_" src="images/title_2.jpg" alt="Photo" title="title" />
@@ -20,14 +20,12 @@
 		</div>
 		<div class="cont">
 			<div id="bar">
-				<h2>{{bar}}</h2>
-                {{#each option}}
+				<h2>{{bar.title}}</h2>
+                {{#each bar.option}}
 				<a href=""><div>{{opt}}</div></a>
 				{{/each}}
 			</div>
-            
-            
-                {{#each table}}
+                 {{#each table}}
 			     <table id="{{tabId}}"> <!-- Таблиця -->
                 <thead>
 					<tr>
@@ -37,10 +35,16 @@
 				<tbody>
                     {{#each row}}
 					<tr>
+                        {{#if codeRef}}
+                        <td><a href='{{href}}'>{{this.codeID}}</a></td>
+                        {{else}}
 						<td>{{this.codeID}}</td>
+                        {{/if}}
 						<td><img src='{{this.photo}}' /></td>
 						<td>{{this.name}}</td>
+                        {{#if sort}}
 						<td>{{this.sort}}</td>
+                        {{/if}}
 						<td>{{this.harvest}}</td>
 						<td>{{this.date}}</td>
 						<td>{{this.cost}}</td>
@@ -49,8 +53,11 @@
 				</tbody>
 			</table>
             {{/each}}
-				</tbody>
-			</table>
+            {{#if par}}
+                {{#each par}}
+				    <p>{{p}}</p>
+                {{/each}}
+            {{/if}}
 		</div>
 	</body>
 </html>
