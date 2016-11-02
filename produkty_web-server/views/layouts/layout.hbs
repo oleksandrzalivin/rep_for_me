@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        {{#block "head"}}
+            {{> head}}
+        {{/block}}
+	</head>
+    <body>
+        {{> top}}
+		<div class="cont">
+			<div id="bar">
+                {{#block "bar"}}
+                   {{> bar}}
+                {{/block}}
+			</div>
+            {{#block "table"}}
+                {{> table}}
+            {{/block}}
+            {{#block "text"}}
+                {{#if par}}
+                {{#each par}}
+				    <p>{{p}}</p>
+                {{/each}}
+            {{/if}}
+            {{/block}}
+		</div>
+    </body>
+</html>              

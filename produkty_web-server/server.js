@@ -1,38 +1,66 @@
-var express = require('express');
-var app = express();
-var exphbs  = require('express-handlebars');
-/* Імпорт значень для шаблонізованих сторінок */
-var pageIndex = require('./views/index');
-var pageFruit = require('./views/fruit');
-var pageVegetable = require('./views/vegetable');
-var pageSpice = require('./views/spice');
-var page001 = require('./views/001');
-var page002 = require('./views/002');
-var page003 = require('./views/003');
-/*
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+var express = require('express'),
+    handlebars = require('handlebars'),
+    layouts = require('handlebars-layouts'),
+    fs = require('fs');
+
+// Register layouts` helpers 
+handlebars.registerHelper(layouts(handlebars));
+
+var app = express(),
+    exphbs  = require('express-handlebars'),
+    helpers = require('./lib/helpers'); // exphbs-helpers
+
+
+ 
+// Register partials via Handlebars
+handlebars.registerPartial('layout', fs.readFileSync('./views/layouts/layout.hbs', 'utf8'));
+handlebars.registerPartial('top', fs.readFileSync('./views/layouts/top.hbs', 'utf8'));
+handlebars.registerPartial('bar', fs.readFileSync('./views/layouts/bar.hbs', 'utf8'));
+handlebars.registerPartial('head', fs.readFileSync('./views/layouts/head.hbs', 'utf8'));
+handlebars.registerPartial('table', fs.readFileSync('./views/layouts/table.hbs', 'utf8'));
+
+
+
+/* Імпорт даних для шаблонізованих сторінок */
+var dataIndex = require('./public/js/index'),
+    dataFruit = require('./public/js/fruit'),
+    dataVegetable = require('./public/js/vegetable'),
+    dataSpice = require('./public/js/spice'),
+    data001 = require('./public/js/001'),
+    data002 = require('./public/js/002'),
+    data003 = require('./public/js/003');
+
+var hbs = exphbs.create({
+    extname: '.hbs',
+    defaultLayout: false,
+    helpers      : helpers,
+    partialsDir: [
+        'views/partials/'
+    ]
 });
-*/
+
 /*Встановлення маршруту до шаблонів*/
 app.set('views', './views');
 /*Встановлення корневого шаблону і обробщика шаблонів*/
-app.engine('handlebars', exphbs({defaultLayout: false}));
-app.set('view engine', 'handlebars');
+// Register `hbs` as our view engine using its bound `engine()` function.
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+
 /*Вказано шлях до статичних файлів*/
 app.use(express.static('./public'));
+
 /*Шаблонізована сторінка "індекс"=================*/
-app.get('/see', pageIndex.content);
+app.get('/see', dataIndex);
 /*Шаблонізована сторінка "фрукти"===============*/
-app.get('/fruit', pageFruit.content);
+app.get('/fruit', dataFruit);
 /*Шаблонізована сторінка "овочі"===============*/
-app.get('/vegetable', pageVegetable.content);
+app.get('/vegetable', dataVegetable);
 /*Шаблонізована сторінка "спеції"===============*/
-app.get('/spice', pageSpice.content);
+app.get('/spice', dataSpice);
 /*Шаблонізована сторінка "товару"===============*/
-app.get('/001', page001.content);
-app.get('/002', page002.content);
-app.get('/003', page003.content);
+app.get('/001', data001);
+app.get('/002', data002);
+app.get('/003', data003);
 /*Повідомлення для неіснуючих маршрутів*/
 app.use(function(req, res, next) {
         res.status(404).render('404', {title:'Not found', text: 'Sorry, cant find that!'});
