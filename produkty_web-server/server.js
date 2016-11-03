@@ -7,8 +7,7 @@ var express = require('express'),
 handlebars.registerHelper(layouts(handlebars));
 
 var app = express(),
-    exphbs  = require('express-handlebars'),
-    helpers = require('./lib/helpers'); // exphbs-helpers
+    exphbs  = require('express-handlebars');
 
 
  
@@ -29,14 +28,17 @@ var dataIndex = require('./public/js/index'),
     data001 = require('./public/js/001'),
     data002 = require('./public/js/002'),
     data003 = require('./public/js/003');
+    data011 = require('./public/js/011'),
+    data012 = require('./public/js/012'),
+    data013 = require('./public/js/013');
+    data021 = require('./public/js/021'),
+    data022 = require('./public/js/022'),
+    data023 = require('./public/js/023');
 
 var hbs = exphbs.create({
+    handlebars: require('handlebars'),
     extname: '.hbs',
-    defaultLayout: false,
-    helpers      : helpers,
-    partialsDir: [
-        'views/partials/'
-    ]
+    defaultLayout: false
 });
 
 /*Встановлення маршруту до шаблонів*/
@@ -61,6 +63,12 @@ app.get('/spice', dataSpice);
 app.get('/001', data001);
 app.get('/002', data002);
 app.get('/003', data003);
+app.get('/011', data011);
+app.get('/012', data012);
+app.get('/013', data013);
+app.get('/021', data021);
+app.get('/022', data022);
+app.get('/023', data023);
 /*Повідомлення для неіснуючих маршрутів*/
 app.use(function(req, res, next) {
         res.status(404).render('404', {title:'Not found', text: 'Sorry, cant find that!'});

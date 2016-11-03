@@ -4,14 +4,14 @@ function(req, res){
     var bar = require('./bar.js'); 
    var table = [{
         
-/* таблиця фруктів -------------------------------*/  
+/* таблиця овочів -------------------------------*/  
         tabId: 'tab_2',
         linkSelf: '/vegetable',
         tabName: 'Овочі',
         row: [{
  /*заголовки колонок gпродукту*/   
             codeRef: false,
-            href: '',
+            href: '#',
             codeID: 'Код продукту',
             photo: 'images/photo.png',
             name: 'Назва',
