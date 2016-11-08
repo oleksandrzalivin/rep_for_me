@@ -9,9 +9,7 @@ handlebars.registerHelper(layouts(handlebars));
 var app = express(),
     exphbs  = require('express-handlebars');
 
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
- 
+
 // Register partials via Handlebars
 handlebars.registerPartial('layout', fs.readFileSync('./views/layouts/layout.hbs', 'utf8'));
 handlebars.registerPartial('top', fs.readFileSync('./views/layouts/top.hbs', 'utf8'));
@@ -75,5 +73,7 @@ app.use(function(req, res, next) {
         res.status(404).render('404', {title:'Not found', text: 'Sorry, cant find that!'});
 });
 /*Локальний хост на порту*/
-app.listen(port, ip);
-console.log('Server running on http://%s:%s', ip, port);
+/*Локальний хост на порту*/
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
