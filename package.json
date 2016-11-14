@@ -4,7 +4,8 @@
   "description": "local-serv",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node /repository/rep_for_me/node_modules/nodemon/bin/nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,10 @@
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.5",
-    "handlebars-layouts": "^3.1.4"
+    "handlebars-layouts": "^3.1.4",
+    "mongodb": "^2.2.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
