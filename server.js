@@ -1,6 +1,7 @@
 var express = require('express'),
     handlebars = require('handlebars'),
     layouts = require('handlebars-layouts'),
+    MongoClient = require('mongodb').MongoClient,
     fs = require('fs');
 
 // Register layouts` helpers 
@@ -15,22 +16,6 @@ handlebars.registerPartial('top', fs.readFileSync('./views/layouts/top.hbs', 'ut
 handlebars.registerPartial('bar', fs.readFileSync('./views/layouts/bar.hbs', 'utf8'));
 handlebars.registerPartial('head', fs.readFileSync('./views/layouts/head.hbs', 'utf8'));
 handlebars.registerPartial('table', fs.readFileSync('./views/layouts/table.hbs', 'utf8'));
-
-// Імпорт даних, локально з папки 'public' для шаблонізованих сторінок 
-var dataIndex = require('./public/data_json/index.json'),
-    dataFruit = require('./public/data_json/fruit.json'),
-    dataVegetable = require('./public/data_json/vegetable.json'),
-    dataSpice = require('./public/data_json/spice.json'),
-    dataBar = require('./public/data_json/bar.json'),
-    data001 = require('./public/data_json/001.json'),
-    data002 = require('./public/data_json/002.json'),
-    data003 = require('./public/data_json/003.json');
-    data011 = require('./public/data_json/011.json'),
-    data012 = require('./public/data_json/012.json'),
-    data013 = require('./public/data_json/013.json');
-    data021 = require('./public/data_json/021.json'),
-    data022 = require('./public/data_json/022.json'),
-    data023 = require('./public/data_json/023.json');
 
 // create instance of hbs-expr with specify propertys
 var hbs = exphbs.create({
@@ -49,27 +34,155 @@ app.set('view engine', 'hbs');
 /*Вказано шлях до статичних файлів*/
 app.use(express.static('./public'));
 
-//Маршрутизація сторінок, запаковування даними із джейсонів ======
-var renDer = function(template, data){
-    return function(req, res){
-        //додаємо дані для БАРУ(меню з права з пустими опціями)
-        data.bar = dataBar.bar;
-        res.render(template, data)
-    }
-};
-app.get('/', renDer('index', dataIndex));
-app.get('/fruit', renDer('index', dataFruit));
-app.get('/vegetable', renDer('index', dataVegetable));
-app.get('/spice', renDer('index', dataSpice));
-app.get('/001', renDer('index', data001));
-app.get('/002', renDer('index', data002));
-app.get('/003', renDer('index', data003));
-app.get('/011', renDer('index', data011));
-app.get('/012', renDer('index', data012));
-app.get('/013', renDer('index', data013));
-app.get('/021', renDer('index', data021));
-app.get('/022', renDer('index', data022));
-app.get('/023', renDer('index', data023));
+// MongoDB
+var db,
+    url = 'mongodb://prod-user:user-prod@ds153667.mlab.com:53667/product';
+MongoClient.connect(url, function(err, database){
+    if (err){
+        return console.log('err-1:', err)
+    };
+    //create cursor for access to our DB
+    db = database;
+    console.log('Connected to DB');
+    //Локальний хост на порту
+    app.listen(3000, function () {
+        console.log('Example app listening on port 3000!')
+    })
+});
+
+//Маршрутизація сторінок, запаковування даними із DB ======
+
+app.get('/', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"index"}).toArray(function(err, result) {
+    result[0].bar = bar;// add the data for menu by right of page with empty 'option_'
+    res.render('index', result[0]);
+        console.log(result[0]) // print only for this page
+    })
+});
+app.get('/fruit', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"fruit"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/vegetable', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"vegetable"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/spice', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"spice"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/001', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"001"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/002', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"003"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/003', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"003"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/011', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"011"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/012', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"012"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/013', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"013"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/021', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"021"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/022', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"022"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
+app.get('/023', function(req, res){
+    var bar;
+    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+    bar = baR[0].bar
+    });
+    db.collection('prod-data').find({"tag":"023"}).toArray(function(err, result) {
+    result[0].bar = bar;
+    res.render('index', result[0])
+    })
+});
 
 //Повідомлення для неіснуючих маршрутів
 app.use(function(req, res, next) {
@@ -77,9 +190,4 @@ app.use(function(req, res, next) {
             title:'Not found',
             text: 'Sorry, cant find that!'
         })
-});
-
-//Локальний хост на порту
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-});
+})

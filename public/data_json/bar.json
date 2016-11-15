@@ -1,4 +1,5 @@
 {
+    "tag": "bar",
     "bar":{"title":"Додаткові відомості",
            "option":[
                 {"opt":"option_1"},
