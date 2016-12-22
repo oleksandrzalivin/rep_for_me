@@ -64,6 +64,10 @@ table {
 	font-family: arial, serif;
 	background-color: #d9ff66;
 }
+.imgBack {
+    height: 300px;
+    width: 500px;
+}
 
 th {
 	background-color:#9AAD38;

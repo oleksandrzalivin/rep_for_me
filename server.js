@@ -16,6 +16,7 @@ handlebars.registerPartial('top', fs.readFileSync('./views/layouts/top.hbs', 'ut
 handlebars.registerPartial('bar', fs.readFileSync('./views/layouts/bar.hbs', 'utf8'));
 handlebars.registerPartial('head', fs.readFileSync('./views/layouts/head.hbs', 'utf8'));
 handlebars.registerPartial('table', fs.readFileSync('./views/layouts/table.hbs', 'utf8'));
+handlebars.registerPartial('categTable', fs.readFileSync('./views/layouts/categTable.hbs', 'utf8'));
 
 // create instance of hbs-expr with specify propertys
 var hbs = exphbs.create({
@@ -35,152 +36,92 @@ app.set('view engine', 'hbs');
 app.use(express.static('./public'));
 
 // MongoDB
-var db,
+var mongoDB,
     url = 'mongodb://prod-user:user-prod@ds153667.mlab.com:53667/product';
-MongoClient.connect(url, function(err, database){
-    if (err){
-        return console.log('err-1:', err)
-    };
-    //create cursor for access to our DB
-    db = database;
-    console.log('Connected to DB');
-    //Локальний хост на порту
-    app.listen(3000, function () {
-        console.log('Example app listening on port 3000!')
+mongoDB = function(view, tagDB, callback) {
+    MongoClient.connect(url, function(err, db){
+        if (err){
+            return console.log('err-1:', err)
+        };
+        console.log('Connected to DB');
+        var bar;
+        db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
+        bar = baR[0].bar
+        });
+        db.collection('prod-data').find({"tag": tagDB}).toArray(function(err, result) {
+        result[0].bar = bar;// add the data for menu by right of page with empty 'option_'
+        callback(view, result[0]);
+//        console.log(result[0])
+        })
+        
     })
-});
+};
 
 //Маршрутизація сторінок, запаковування даними із DB ======
 
 app.get('/', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"index"}).toArray(function(err, result) {
-    result[0].bar = bar;// add the data for menu by right of page with empty 'option_'
-    res.render('index', result[0]);
-        console.log(result[0]) // print only for this page
+    mongoDB("indexMain", "index", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/fruit', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"fruit"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "fruit", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/vegetable', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"vegetable"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "vegetable", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/spice', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"spice"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "spice", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/001', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"001"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "001", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/002', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"003"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "002", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/003', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"003"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "003", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/011', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"011"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "011", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/012', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"012"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "012", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/013', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"013"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "013", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/021', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"021"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "021", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/022', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"022"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "022", function(view, result) {
+        res.render(view, result)
     })
 });
 app.get('/023', function(req, res){
-    var bar;
-    db.collection('prod-data').find({"tag":"bar"}).toArray(function(err, baR) {
-    bar = baR[0].bar
-    });
-    db.collection('prod-data').find({"tag":"023"}).toArray(function(err, result) {
-    result[0].bar = bar;
-    res.render('index', result[0])
+    mongoDB("index", "023", function(view, result) {
+        res.render(view, result)
     })
 });
 
@@ -190,4 +131,8 @@ app.use(function(req, res, next) {
             title:'Not found',
             text: 'Sorry, cant find that!'
         })
+});
+//Локальний хост на порту
+app.listen(3000, function () {
+    console.log('Example app listening on port 3000!')
 })
