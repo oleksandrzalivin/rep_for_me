@@ -58,6 +58,7 @@ div {
 	
 }
 table {
+    margin: 10px;
 	text-align: center;
 	border:1px #0FA0AE solid;
 	border-radius: 7px;
@@ -73,15 +74,6 @@ th {
 	background-color:#9AAD38;
 	font-size:2em;
 	font-family:Georgia, arial;
-}
-#tab_1 {
-	margin:2em;
-}
-#tab_2 {
-	margin:2em;
-}
-#tab_3 {
-	margin:2em;
 }
 td img {
 	height:80px;
