@@ -19,8 +19,45 @@
         <script src="./javaScript/vendor/underscore.js"></script>
         <script src="./javaScript/vendor/backbone.js"></script>
         <script src="./javaScript/admin.js"></script>
-        <script id="tweet-template" type="text/template">
-            
+        <script>
+            $(document).ready(function() {
+                // initialize
+                new TreeView(); 
+            });
+        </script>
+        
+        <script id="categTemplate" type="text/template">
+                <form id="edit-form">
+                    <table class="table"> <!-- Таблиця -->
+                        <thead>
+                            <tr>
+                                <% if (!parent) { %>
+                                <th colspan="7"><input id="name" name="name" value="<%= name %>" type="text" />
+                                <br />href:<input id="href" name="href" value="<%= href %>" type="text" /></th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                              <tr>
+                                <% if (parent) {%>
+                                    <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
+                                    <br />Href:<input id="href" name="href" value="<%= href %>" type="text" /></td>
+                                    <td><input id="name" name="name" value="<%= name %>" type="text" /></td>
+                                <% } else { %>
+                                    <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
+                                    <td><input id="_name" name="_name" value="<%= _name %>" type="text" /></td>
+                                <% } %>
+                                <td>Фото: <br /><input id="photo" name="photo" value="<%= photo %>" type="text" /></td>
+                                <td><input id="sort" name="sort" value='<%= sort %>' type="text" /></td>
+                                <td><input id="harvest" name="harvest" value="<%= harvest %>" type="text" /></td>
+                                <td><input id="date" name="date" value="<%= date %>" type="text" /></td>
+                                <td><input id="cost" name="cost" value="<%= cost %>" type="text" /></td>
+                              </tr>
+                        </tbody>
+                    </table>
+                    <button id="save-btn">Save</button>
+                    <button id="dalete-btn">Delete</button>
+                </form>
         </script>
     </body>
 </html>

@@ -47,13 +47,23 @@ admin = function(callback) {
         if (err){
             return console.log('err-1:', err)
         };
-        console.log('Connected to DB for tweet');   
+        console.log('Connected to DB for admin');   
         callback(db.collection('prodData') )
+    })
+};
+tree = function(callback) {
+    MongoClient.connect(url, function(err, db){
+        if (err){
+            return console.log('err-1:', err)
+        };
+        console.log('Connected to DB for tree');   
+        callback(db.collection('site-tree') )
     })
 };
                         
 
 module.exports = {
     mongoDB: mongoDB,
-    dbAdmin: admin
+    dbAdmin: admin,
+    dbTree: tree
 };

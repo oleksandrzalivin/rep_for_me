@@ -4,9 +4,6 @@ var home = require('./controllers/home_controller'),
 module.exports = function(app) {
     app.get('/admin', home.admin);
     
-    app.get('/tweeter', home.tweeter);
-    app.get('/tweets', tweets.index);
-    
     app.get('/', home.home);
     app.get('/fruit', home.fruit);
     app.get('/vegetable', home.vegetable);
@@ -24,6 +21,13 @@ module.exports = function(app) {
     app.get('/REST', rest.index);
     app.post('/REST', rest.create);
     app.get('/REST/:id', rest.show);
-    app.put('/REST/:id', rest.update);
-    app.delete('/REST/:id', rest.destroy)
+    app.put('/REST', rest.update);
+    app.delete('/REST/:id', rest.destroy); 
+    //Повідомлення для неіснуючих маршрутів
+    app.use(function(req, res, next) {
+            res.status(404).render('404', {
+                title:'Not found',
+                text: 'Sorry, cant find that!'
+            })
+    });
 };
