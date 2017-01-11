@@ -43,13 +43,6 @@ app.use(express.static('./public'));
 //Маршрутизація сторінок, запаковування даними із DB ======
 require('./routes')(app);
 
-//Повідомлення для неіснуючих маршрутів
-app.use(function(req, res, next) {
-        res.status(404).render('404', {
-            title:'Not found',
-            text: 'Sorry, cant find that!'
-        })
-});
 //Локальний хост на порту
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')

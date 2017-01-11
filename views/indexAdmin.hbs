@@ -15,14 +15,14 @@
             </div>
         </div>
         
-        <script src="./javaScript/vendor/jquery-3.1.1.min.js"></script>
+        <script src="./javaScript/vendor/jquery-3.1.1.js"></script>
         <script src="./javaScript/vendor/underscore.js"></script>
         <script src="./javaScript/vendor/backbone.js"></script>
         <script src="./javaScript/admin.js"></script>
         <script>
             $(document).ready(function() {
                 // initialize
-                new TreeView(); 
+                new TreeView();
             });
         </script>
         
@@ -56,7 +56,10 @@
                         </tbody>
                     </table>
                     <button id="save-btn">Save</button>
-                    <button id="dalete-btn">Delete</button>
+                    <% if (_id == "5873b8ebf36d2872530dfeac" || _id == "586e6219f36d282f8ecbb80a") { %>
+                    <% } else { %>
+                    <button id="delete-btn">Delete</button>
+                    <% } %>
                 </form>
         </script>
     </body>

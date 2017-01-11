@@ -1,5 +1,6 @@
 // MongoDB
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient,
+    ObjectID = require('mongodb').ObjectID;
 
 var mongoDB,
     admin,
@@ -57,7 +58,7 @@ tree = function(callback) {
             return console.log('err-1:', err)
         };
         console.log('Connected to DB for tree');   
-        callback(db.collection('site-tree') )
+        callback(db.collection('siteTree') )
     })
 };
                         
@@ -65,5 +66,6 @@ tree = function(callback) {
 module.exports = {
     mongoDB: mongoDB,
     dbAdmin: admin,
-    dbTree: tree
+    dbTree: tree,
+    ObjectID: ObjectID
 };

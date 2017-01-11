@@ -1,10 +1,11 @@
-var db = require('../db').dbTree;
+var db = require('../db').dbTree,
+    ObjectID = require('../db').ObjectID;
 
 module.exports = {
     index: function(req, res) {
         db(function(collection){
             collection.find().toArray(function(err, docs) {
-                if(err) return res.status(500).send({status: 'Failed to find tweets'});
+                if(err) return res.status(500).send({status: 'Failed to find docs'});
                 res.send(docs);
             })
         }) 
@@ -12,27 +13,32 @@ module.exports = {
     show: function(req, res) {
         
     },
-    create: function(req, res) {console.log("req:",req)/*
+    create: function(req, res) {console.log("req:",req)
         var params = req.body;
-        console.log("params:", params);
         db(function(collection){
             collection.insert(params, function(err) {
-                if (err) return res.status(500).send({status: "Failed to write to the DBtweets"});
+                if (err) return res.status(500).send({status: "Failed to create doc"});
                 res.send(params);
             })
-        })*/
+        })
     },
     destroy: function(req, res) {
-        
+        var id = req.params.id;
+        doc = req.body;
+        db(function(collection) {
+            collection.remove({_id: new ObjectID(id)}, function(err) {
+                if(err) return res.status(500).send({err: err});
+                res.send(doc);
+            });
+        });
     },
     update: function(req, res) {
-        var id = req.body["_id"],
+        var id = req.params.id,
             doc = req.body;
         delete doc._id;
         db(function(collection) {
-            collection.update({_id: id}, doc, { upsert: true }, function(err, numUpdated) {
-                console.log(id, doc,"err",err,"num",numUpdated);
-                if(err || numUpdated !==1) return res.send({err: err, num: numUpdated});
+            collection.update({_id: new ObjectID(id)}, doc, function(err) {
+                if(err) return res.status(500).send({err: err});
                 res.send(doc);
             });
         });

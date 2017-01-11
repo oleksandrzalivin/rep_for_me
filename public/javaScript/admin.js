@@ -27,29 +27,17 @@ function hasClass(elem, className) {
 // Модель дерева структури сайту
 var Tree = Backbone.Collection.extend({
     model: Backbone.Model.extend({
-        url: "/REST",
         idAttribute: "_id"
     }),
     url: "/REST"
 }),
     tree = new Tree();
-tree.fetch({
-        success: function() {console.log('retrive data for "tree" model from server')},
-        error: function() {console.log('cannot retrive data for "tree" model from server')}
-    });
+
 // представлення категорії(моделі із колекції)
 var CategView = Backbone.View.extend({
-//    model: new Backbone.Model.extend(),
-    el: $('#stuff'),
+    tagName: "div",
     initialize: function(options) {
-        
         this.template = _.template($("#categTemplate").html() );
-//        this.model.set(options.model);
-//        this.model = options.model;
-//        console.log(arguments);
-//        debugger;
-//        this.model.on("change", this.render, this).trigger("change");
-//        this.render();
     },
     events: {
         "click #save-btn": "saveItem",
@@ -57,19 +45,36 @@ var CategView = Backbone.View.extend({
     },
     saveItem: function(ev) {
         ev.preventDefault();
-        this.model.set(this.newAtr() );
-        debugger;
+        var id = this.model.get("_id");
+        if (id == "5873b8ebf36d2872530dfeac" || id == "586e6219f36d282f8ecbb80a") {
+            this.model.set(this.newAtr() ).unset("_id");
+            tree.add(this.model).save({}, {
+                success: function() {console.log('successfully created model')},
+                error: function() {console.log('cannot create model')}
+            });
+            tree.fetch({
+                success: function() {console.log('retrive data for "tree" model from server')},
+                error: function() {console.log('cannot retrive data for "tree" model from server')}
+                });
+        } else {
+        tree.get(id).set(this.newAtr() ).save({}, {
+            success: function() {console.log('successfully update model_id: ' + id)},
+            error: function() {console.log('cannot update model_id: ' + id)}
+        });
+//        this.model.set(this.newAtr() );
+//        this.model.save();
+        };
         tree.trigger("update");
-//        debugger;
-   /*     this.model.save({},{
-            success: function() {console.log('successfuly update doc')},
-            error: function() {console.log('cannot update doc')}
-        });*/
-//        tree.fetch();// ініціалізація нового рендера дерева
-        this.$el.html("");
+        this.remove();// remove this view instance
     },
     deleteItem: function(ev) {
         ev.preventDefault();
+        var id = this.model.get("_id");
+        tree.get(id).destroy({
+            success: function() {console.log('successfully deleted model_id: ' + id)},
+            error: function() {console.log('cannot delete model_id: ' + id)}
+        });
+        this.remove();// remove this view instance
     }, 
     newAtr: function() { // записує нові значення атрибутів із сторінки
         var atr = Object.create(null);
@@ -82,7 +87,7 @@ var CategView = Backbone.View.extend({
         return atr;
     },
     render: function() {
-        this.$el.html(this.template(this.model.toJSON() ) );
+        $("#stuff").html(this.$el.html(this.template(this.model.toJSON() ) ) );
         return this;
     }
 });
@@ -92,8 +97,15 @@ var TreeView = Backbone.View.extend({
     collection: tree,
     el: $('#siteTree'),
     initialize: function() {
-        this.collection.on("update", this.render, this);
+        this.collection.on("update", this.render, this),
+        this.newFetch()
     },
+    newFetch: function() {
+        this.collection.fetch({
+            success: function() {console.log('retrive data for "tree" model from server')},
+            error: function() {console.log('cannot retrive data for "tree" model from server')}
+            })
+        },
     events: {
         "click .treeHref": "onNodeClick"
     },
@@ -101,12 +113,16 @@ var TreeView = Backbone.View.extend({
         var categories = this._buildTreeFromData();
         this.$el.html("<div onclick='tree_toggle(arguments[0])'>" + fu_tree(categories) + "</div>");
     },
+    deleteCategView: function() {
+        this.categView.remove();
+    },
     onNodeClick: function(ev) {
         var target = ev.target,
-            id = $(target).data("id");
+            id = $(target).data("id"),
+            parentId = $(target).data("parent");
         ev.preventDefault();
-        var model = this.collection.get(id);
-        new CategView({"model": model}).render();
+        var model = this.collection.get(id).clone();
+        new CategView({"model": model.set({parent: parentId})}).render();
         
     },
     _buildTreeFromData: function() {
@@ -118,9 +134,14 @@ var TreeView = Backbone.View.extend({
                 var id = parent._id;
                 parent.childrens = [];
                 _.each(data, function(value, key, list) {
-                    if (value.parent == id) {
-                        parent.childrens.push(value)
-                    }
+                    if (value.parent == id ) {
+                        parent.childrens.push(value);
+                    };
+                    if (value._id == "5873b8ebf36d2872530dfeac") {// перший елемент - новий бланк
+                        var val = _.clone(value);
+                        val.parent = id;
+                        parent.childrens.splice(0, 0, val);
+                    };
                 });
                 categories.push(parent);
             };
@@ -150,26 +171,26 @@ function fu_tree(categ) {
                 // якщо є вкладені елементи - розпакувати
                 if (categ[key].childrens) {
                     str = str + "<li class='Node ExpandClosed IsLast'><div class='Expand'></div>" + 
-                    "<div class='Content'><a data-id='" + categ[key]._id + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div>";
+                    "<div class='Content'><a data-id='" + categ[key]._id + "' data-parent='" + categ[key].parent + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div>";
                     str += tree(categ[key].childrens);
                     str = str + "</li>"
                 // якщо останній елемент - записати відповідні стилі
                 } else {
                     str = str + "<li class='Node ExpandLeaf IsLast'><div class='Expand'></div>" + 
-                    "<div class='Content'><a data-id='" + categ[key]._id + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div></li>"
+                    "<div class='Content'><a data-id='" + categ[key]._id + "' data-parent='" + categ[key].parent + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div></li>"
                 }
             // якщо не останній елемент
             } else {
                 // якщо є вкладені елементи - розпакувати
                 if (categ[key].childrens) {
                     str = str + "<li class='Node ExpandClosed'><div class='Expand'></div>" + 
-                    "<div class='Content'><a data-id='" + categ[key]._id + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div>";
+                    "<div class='Content'><a data-id='" + categ[key]._id + "' data-parent='" + categ[key].parent + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div>";
                     str += tree(categ[key].childrens);
                     str = str + "</li>"
                 // якщо останній елемент - записати відповідні стилі
                 } else {
                     str = str + "<li class='Node ExpandOne'><div class='Expand'></div>" + 
-                    "<div class='Content'><a data-id='" + categ[key]._id + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div></li>"
+                    "<div class='Content'><a data-id='" + categ[key]._id + "' data-parent='" + categ[key].parent + "' class='treeHref' href='" + categ[key].href + "'>" + categ[key].name + "</a></div></li>"
                 }
             }
         }
