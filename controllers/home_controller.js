@@ -5,10 +5,13 @@ module.exports = {
         res.render('indexAdmin')
     },
     home: function(req, res){
+        res.render("index");
+    },
+    /*home: function(req, res){
         db.mongoDB("indexMain", "index", function(view, result) {
             res.render(view, result)
             })
-    },
+    },*/
     fruit: function(req, res){
         db.mongoDB("index", "fruit", function(view, result) {
             res.render(view, result)

@@ -18,10 +18,8 @@ app.use(bodyParser.urlencoded({     // для поддержки URL кодир�
 // Register partials via Handlebars
 handlebars.registerPartial('layout', fs.readFileSync('./views/layouts/layout.hbs', 'utf8'));
 handlebars.registerPartial('top', fs.readFileSync('./views/layouts/top.hbs', 'utf8'));
-handlebars.registerPartial('bar', fs.readFileSync('./views/layouts/bar.hbs', 'utf8'));
 handlebars.registerPartial('head', fs.readFileSync('./views/layouts/head.hbs', 'utf8'));
 handlebars.registerPartial('table', fs.readFileSync('./views/layouts/table.hbs', 'utf8'));
-handlebars.registerPartial('categTable', fs.readFileSync('./views/layouts/categTable.hbs', 'utf8'));
 
 // create instance of hbs-expr with specify propertys
 var hbs = exphbs.create({

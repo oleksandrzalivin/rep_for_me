@@ -5,8 +5,20 @@
         <link rel="stylesheet" href="./stylesheets/stylesheet.css" />
         <link rel="stylesheet" href="./stylesheets/admin.css" />
         <title>Administrator</title>
+        <script src="js/lib/require.js"></script>
+        <script>
+            //Load common code that includes config, then load the app
+            //logic for this page.
+            requirejs(['./js/config'], function (config) {
+                // sets the baseUrl to be js/ so
+                //can just ask for 'app/main' here instead
+                //of 'js/app/main'
+                requirejs(['app/mainAdmin']);
+            });
+        </script>
     </head>
     <body>
+        <a href="/">Go home</a>
         <h1>You are welcome, admin!</h1>
         <div class="container-fluid">
             <div class="row" id="mainDiv">
@@ -14,17 +26,6 @@
                 <div class="col-md-9" id="stuff"></div>
             </div>
         </div>
-        
-        <script src="./javaScript/vendor/jquery-3.1.1.js"></script>
-        <script src="./javaScript/vendor/underscore.js"></script>
-        <script src="./javaScript/vendor/backbone.js"></script>
-        <script src="./javaScript/admin.js"></script>
-        <script>
-            $(document).ready(function() {
-                // initialize
-                new TreeView();
-            });
-        </script>
         
         <script id="categTemplate" type="text/template">
                 <form id="edit-form">
