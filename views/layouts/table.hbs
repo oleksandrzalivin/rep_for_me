@@ -31,7 +31,9 @@
                  <% } %>
                  <td><img src='<%= photo %>' /></td>
                  <td><%= name %></td>
-                 <td><%= sort %></td>
+                 <% if (sort) { %>
+                    <td><%= sort %></td>
+                 <% } %>
                  <td><%= harvest %></td>
                  <td><%= date %></td>
                  <td><%= cost %></td>
@@ -49,38 +51,11 @@
                  <% } %>
                  <td><img src='<%= photo %>' /></td>
                  <td><%= name %></td>
-                 <td><%= sort %></td>
+                 <% if (sort) { %>
+                    <td><%= sort %></td>
+                 <% } %>
                  <td><%= harvest %></td>
                  <td><%= date %></td>
                  <td><%= cost %></td>
               </tr>
-</script>
-
-<script id="tableTemplateItem" type="text/template">
-    <table class="table"> <!-- Таблиця -->
-        <thead>
-            <tr>
-				 <th colspan="7"><a href="<%=linkSelf%>"><%=tabName%></a></th>
-            </tr>
-	    </thead>
-        <tbody>
-            <%=#each row%>
-		      <tr>
-                    <%=#if codeRef%>
-                        <td><a href='<%=href%>'><%=this.codeID%></a></td>
-                    <%=else%>
-					     <td><%=this.codeID%></td>
-                    <%=/if%>
-					     <td><img src='<%=this.photo%>' /></td>
-					     <td><%=this.name%></td>
-                    <%=#if sort%>
-					     <td><%=this.sort%></td>
-                    <%=/if%>
-					     <td><%=this.harvest%></td>
-					     <td><%=this.date%></td>
-					     <td><%=this.cost%></td>
-              </tr>
-            <%=/each%>
-        </tbody>
-    </table>
 </script>

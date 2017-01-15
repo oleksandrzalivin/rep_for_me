@@ -47,9 +47,12 @@
                                 <% } else { %>
                                     <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
                                     <td><input id="_name" name="_name" value="<%= _name %>" type="text" /></td>
+                                    <td>background<br /><input id="img" name="img" value="<%= img %>" type="text" /></td>
                                 <% } %>
                                 <td>Фото: <br /><input id="photo" name="photo" value="<%= photo %>" type="text" /></td>
+                                <% if (sort) { %>
                                 <td><input id="sort" name="sort" value='<%= sort %>' type="text" /></td>
+                                <% } %>
                                 <td><input id="harvest" name="harvest" value="<%= harvest %>" type="text" /></td>
                                 <td><input id="date" name="date" value="<%= date %>" type="text" /></td>
                                 <td><input id="cost" name="cost" value="<%= cost %>" type="text" /></td>
