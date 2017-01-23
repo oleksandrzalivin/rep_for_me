@@ -30,4 +30,6 @@ module.exports = function(app) {
                 text: 'Sorry, cant find that!'
             })
     });*/
+    //здесь происходит сама загрузка
+    app.post('/file', rest.file);
 };

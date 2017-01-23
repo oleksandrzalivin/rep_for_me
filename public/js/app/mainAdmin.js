@@ -26,7 +26,28 @@ define(function (require) {
         },
         saveItem: function(ev) {
             ev.preventDefault();
-            var id = this.model.get("_id");
+            var id = this.model.get("_id"),
+                file = $('#photo').prop('files');
+            if (file.length) {
+                     // Создаем новый объект FormData
+                    var fd = new FormData();
+
+                    fd.append('file', file[0]);
+
+                    // Загружаем файл
+
+                    $.ajax({
+                        url: '/file',
+                        data: fd,
+                        contentType:false,
+                        processData:false,
+                        type:'POST',
+                        success: function(){
+                            console.log("file sent");
+                        }
+                    });
+                }
+            
             if (id == "5873b8ebf36d2872530dfeac" || id == "586e6219f36d282f8ecbb80a") {
                 this.model.set(this.newAtr() ).unset("_id");
                 tree.add(this.model).save({}, {
@@ -59,9 +80,13 @@ define(function (require) {
         }, 
         newAtr: function() { // записує нові значення атрибутів із сторінки
             var atr = Object.create(null);
+            var file = $('#photo').prop('files');
             _.each(this.model.toJSON(), function(value, key, list) {
                 var text = $("#" + key).val();
                 if (text) {
+                    if (key == "photo" && file.length) {
+                        text = "./images/" + file[0].name;
+                    }
                     atr[key] = text;
                 }
             });
