@@ -13,7 +13,7 @@
                 // sets the baseUrl to be js/ so
                 //can just ask for 'app/main' here instead
                 //of 'js/app/main'
-                requirejs(['app/mainAdmin']);
+                requirejs(['app/admin']);
             });
         </script>
     </head>
@@ -47,7 +47,7 @@
                                 <% } else { %>
                                     <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
                                     <td><input id="_name" name="_name" value="<%= _name %>" type="text" /></td>
-                                    <td>background<br /><input id="img" name="img" value="<%= img %>" type="text" /></td>
+                                    <td>background:<br /><img src="<%= img %>" /><br /><input id="img" name="img" value="<%= img %>" type="file" accept="image/jpg, image/png" /></td>
                                 <% } %>
                                 <td>Фото:<br /><img src="<%= photo %>" /><br /><input id="photo" name="photo" type="file" accept="image/jpg, image/png" /></td>
                                 <% if (sort) { %>

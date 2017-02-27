@@ -1,2 +1,36 @@
-{{#extend "layout"}}
-{{/extend}}
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8" />
+        <title>Продукти</title>
+        <link type="text/css" rel="stylesheet" href="stylesheets/stylesheet.css" />
+        <link rel="icon" href="images/ico.jpg" />
+        <script src="js/lib/require.js"></script>
+        <script>
+            //Load common code that includes config, then load the app
+            //logic for this page.
+            requirejs(['./js/config'], function (config) {
+                // sets the baseUrl to be js/ so
+                //can just ask for 'app/main' here instead
+                //of 'js/app/main'
+                requirejs(['app/page']);
+            });
+        </script>
+	</head>
+    <body>
+        <div id="top"> 
+            <h1>
+                <a id="a_" href="/">Живі продукти</a>
+            </h1>
+            <a href="/admin">Go admin</a>
+            <div>
+                <img id="_1_" src="images/title_1.jpg" alt="Фото фруктів" title="Відбірні, соковиті" />
+                <img id="_2_" src="images/title_2.jpg" alt="Photo" title="title" />
+                <img id="_3_" src="images/title_3.jpg" />
+            </div>
+        </div>
+		<div class="cont">
+            <div id="tableDiv"></div>
+		</div>
+    </body>
+</html>              

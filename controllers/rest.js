@@ -3,37 +3,78 @@ var db = require('../db').dbTree,
     multiparty = require('multiparty'),
     fs = require('fs');
 
+function deleteFile (list) {
+    if (!list.length) return;
+    list.map(function (val) {
+        //здесь будет храниться путь k файлу
+        var path = './public/' + val;
+        if(fs.existsSync(path)) {
+            //если загружаемый файл существует удаляем его
+            fs.unlinkSync(path);
+        }
+        console.log('deleted file(s):', val);
+    });
+}
+
 module.exports = {
+    // пошук і видача всіх документів у колекції
     index: function(req, res) {
         db(function(collection){
             collection.find().toArray(function(err, docs) {
                 if(err) return res.status(500).send({status: 'Failed to find docs'});
                 res.send(docs);
-            })
-        }) 
+            });
+        });
     },
-    show: function(req, res) {
-        
-    },
-    create: function(req, res) {console.log("req:",req)
+    
+    // вставка нового документу в колекцію
+    create: function(req, res) {
         var params = req.body;
         db(function(collection){
             collection.insert(params, function(err) {
                 if (err) return res.status(500).send({status: "Failed to create doc"});
                 res.send(params);
-            })
-        })
+            });
+        });
     },
+    
+    // видалення документа із колекції
     destroy: function(req, res) {
-        var id = req.params.id;
-        doc = req.body;
+        var id = req.params.id,
+            doc = req.body,
+            imgForDel = [];
         db(function(collection) {
+            collection.find({_id: new ObjectID(id)}).toArray(function(err, d) {
+                if(err) return res.status(500).send({status: 'Failed to find docs'});
+                // if its category
+                // find its sub-elements
+                if (!d[0].parent) {
+                    imgForDel.push(d[0].img);
+                    collection.find({parent: id}).toArray(function(err, d) {
+                        if(err) return res.status(500).send({status: 'Failed to find docs'});
+                        if (d.length) {
+                            // delete sub-elements
+                            for (var i in d) {
+                                imgForDel.push(d[i].photo);
+                                collection.remove({parent: id}, function(err) {
+                                    if(err) return res.status(500).send({err: err});
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    imgForDel.push(d[0].photo);
+                }
+            });
             collection.remove({_id: new ObjectID(id)}, function(err) {
                 if(err) return res.status(500).send({err: err});
+                deleteFile(imgForDel);
                 res.send(doc);
             });
         });
     },
+    
+    // оновлення існуючого документу в колекції
     update: function(req, res) {
         var id = req.params.id,
             doc = req.body;
@@ -45,6 +86,8 @@ module.exports = {
             });
         });
     },
+    
+    // завантаження зображення на сервер
     file: function(req, res, next) {
         // создаем форму
         var form = new multiparty.Form();
@@ -52,7 +95,7 @@ module.exports = {
         var uploadFile = {uploadPath: '', type: '', size: 0};
         //максимальный размер файла
         var maxSize = 2 * 1024 * 1024; //2MB
-        //поддерживаемые типы(в данном случае это картинки формата jpeg,jpg и png)
+        //поддерживаемые типы(в данном случае это картинки формата jpeg, jpg и png)
         var supportMimeTypes = ['image/jpg', 'image/png'];
         //массив с ошибками произошедшими в ходе загрузки файла
         var errors = [];
@@ -116,4 +159,4 @@ module.exports = {
         // парсим форму
         form.parse(req);
     }
-};
+}

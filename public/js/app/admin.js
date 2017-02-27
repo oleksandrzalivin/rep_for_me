@@ -1,17 +1,39 @@
-define(function (require) {
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone');
-    require('./src/drawTree');// define functions for drawing in window scope
+define(['jquery', 'underscore', 'backbone', './src/drawTree'], function ($, _, Backbone, fu_tree) {
+    // відкривання-закривання вузлів
+    window.tree_toggle = function(event) {
+        event = event || window.event;
+        var clickedElem = event.target || event.srcElement;
+
+        if (!hasClass(clickedElem, 'Expand')) {
+            return; // клик не там
+        }
+
+        // Node, на который кликнули
+        var node = clickedElem.parentNode;
+        if (hasClass(node, 'ExpandLeaf')) {
+            return; // клик на листе
+        }
+
+        // определить новый класс для узла
+        var newClass = hasClass(node, 'ExpandOpen') ? 'ExpandClosed' : 'ExpandOpen';
+        // заменить текущий класс на newClass
+        // регексп находит отдельно стоящий open|close и меняет на newClass
+        var re =  /(^|\s)(ExpandOpen|ExpandClosed)(\s|$)/;
+        node.className = node.className.replace(re, '$1' + newClass + '$3');
+        
+        function hasClass(elem, className) {
+        return new RegExp("(^|\\s)" + className+"(\\s|$)").test(elem.className);
+        }
+    }
     
-    
-    // Модель дерева структури сайту
+    // Колекція моделей дерева структури сайту
     var Tree = Backbone.Collection.extend({
         model: Backbone.Model.extend({
             idAttribute: "_id"
         }),
         url: "/REST"
     }),
+        // екземпляр колекції
         tree = new Tree();
 
     // представлення категорії(моделі із колекції)
@@ -27,47 +49,45 @@ define(function (require) {
         saveItem: function(ev) {
             ev.preventDefault();
             var id = this.model.get("_id"),
-                file = $('#photo').prop('files');
+                file = $('input[type=file]').prop('files');
             if (file.length) {
                      // Создаем новый объект FormData
                     var fd = new FormData();
-
                     fd.append('file', file[0]);
-
                     // Загружаем файл
-
                     $.ajax({
                         url: '/file',
                         data: fd,
                         contentType:false,
                         processData:false,
                         type:'POST',
-                        success: function(){
+                        success: function() {
                             console.log("file sent");
                         }
                     });
                 }
-            
+            // new element: "5873b8ebf36d2872530dfeac", new categ: "586e6219f36d282f8ecbb80a"
             if (id == "5873b8ebf36d2872530dfeac" || id == "586e6219f36d282f8ecbb80a") {
                 this.model.set(this.newAtr() ).unset("_id");
                 tree.add(this.model).save({}, {
-                    success: function() {console.log('successfully created model')},
+                    success: function() {
+                        console.log('successfully created model');
+                        tree.fetch({
+                            success: function() {console.log('retrive data for "tree" model from server')},
+                            error: function() {console.log('cannot retrive data for "tree" model from server')}
+                            });
+                    },
                     error: function() {console.log('cannot create model')}
                 });
-                tree.fetch({
-                    success: function() {console.log('retrive data for "tree" model from server')},
-                    error: function() {console.log('cannot retrive data for "tree" model from server')}
-                    });
             } else {
             tree.get(id).set(this.newAtr() ).save({}, {
                 success: function() {console.log('successfully update model_id: ' + id)},
                 error: function() {console.log('cannot update model_id: ' + id)}
             });
-    //        this.model.set(this.newAtr() );
-    //        this.model.save();
-            };
+            }
             tree.trigger("update");
-            this.remove();// remove this view instance
+            // remove this view instance
+            this.remove();
         },
         deleteItem: function(ev) {
             ev.preventDefault();
@@ -76,15 +96,20 @@ define(function (require) {
                 success: function() {console.log('successfully deleted model_id: ' + id)},
                 error: function() {console.log('cannot delete model_id: ' + id)}
             });
-            this.remove();// remove this view instance
-        }, 
-        newAtr: function() { // записує нові значення атрибутів із сторінки
+            // remove this view instance
+            this.remove();
+        },
+        // записує нові значення атрибутів із форми вводу
+        newAtr: function() { 
             var atr = Object.create(null);
-            var file = $('#photo').prop('files');
+            var file = $('input[type=file]').prop('files');
             _.each(this.model.toJSON(), function(value, key, list) {
                 var text = $("#" + key).val();
                 if (text) {
-                    if (key == "photo" && file.length) {
+                    if (key == "photo" && list.parent && file.length) {
+                        text = "./images/" + file[0].name;
+                    }
+                    if (key == "img" && !list.parent && file.length) {
                         text = "./images/" + file[0].name;
                     }
                     atr[key] = text;
@@ -98,7 +123,7 @@ define(function (require) {
         }
     });
 
-    // Педставлення моделі 'Tree'
+    // Педставлення колекції 'Tree'(всього дерева)
     var TreeView = Backbone.View.extend({
         collection: tree,
         el: $('#siteTree'),
@@ -110,7 +135,7 @@ define(function (require) {
             this.collection.fetch({
                 success: function() {console.log('retrive data for "tree" model from server')},
                 error: function() {console.log('cannot retrive data for "tree" model from server')}
-                })
+                });
             },
         events: {
             "click .treeHref": "onNodeClick"
@@ -143,27 +168,55 @@ define(function (require) {
                         if (value.parent == id ) {
                             parent.childrens.push(value);
                         };
-                        if (value._id == "5873b8ebf36d2872530dfeac" && id !== "586e6219f36d282f8ecbb80a") {// перший елемент - новий бланк
+                        // якщо перший елемент - новий бланк чи нова категорія
+                        if (value._id == "5873b8ebf36d2872530dfeac" && id !== "586e6219f36d282f8ecbb80a") {
                             var val = _.clone(value);
                             val.parent = id;
                             parent.childrens.splice(0, 0, val);
                         };
                     });
-                    if (id == "586e6219f36d282f8ecbb80a") {// new category
+                    // якщо new category
+                    if (id == "586e6219f36d282f8ecbb80a") {
                         categories.splice(0, 0, parent);
                     } else {
                         categories.push(parent);
-                    };
-                };
-            })
-            return categories
+                    }
+                }
+            });
+            return categories;
         }
 
     });
-
+    
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+            //"*actions": "defaultRoute",
+            'index': 'index',
+            'test': 'test'
+        },
+        index: function() {
+            console.log('index test dliya Zalivina');
+        },
+        test: function() {
+            console.log("try router");
+        }
+    });
+    Backbone.history.start();
 
     $(document).ready(function() {
         // initialize
+        
+        /*app_router.on('route:defaultRoute', function(actions) {
+            console.log(actions);
+        });*/
+        
         new TreeView();
+        new AppRouter();
+       /* $('#test-route').on('click', function(event) {
+            event.preventDefault();
+            console.log('test route', window.app_router);
+            debugger;
+            window.app_router.navigate('admin', {trigger: true});
+        });*/
     });
 });
