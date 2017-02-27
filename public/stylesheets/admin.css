@@ -1,0 +1,15 @@
+@import "./vendor/wbootstrap.css";
+@import "./tree.css";
+
+body {
+    background: none !important;
+}
+#siteTree {
+    height: 70vh;
+    overflow: scroll;
+    border-right: 1px solid black;
+}
+#stuff {
+    height: 70vh;
+    overflow: scroll;
+}

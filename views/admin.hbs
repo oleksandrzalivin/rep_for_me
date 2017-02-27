@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./stylesheets/stylesheet.css" />
+        <link rel="stylesheet" href="./stylesheets/admin.css" />
+        <title>Administrator</title>
+        <script src="js/lib/require.js"></script>
+        <script>
+            //Load common code that includes config, then load the app
+            //logic for this page.
+            requirejs(['./js/config'], function (config) {
+                // sets the baseUrl to be js/ so
+                //can just ask for 'app/main' here instead
+                //of 'js/app/main'
+                requirejs(['app/admin']);
+            });
+        </script>
+    </head>
+    <body>
+        <a href="/">Go home</a>
+        <h1>You are welcome, admin!</h1>
+        <div class="container-fluid">
+            <div class="row" id="mainDiv">
+                <div class="col-md-3" id="siteTree"></div>
+                <div class="col-md-9" id="stuff"></div>
+            </div>
+        </div>
+        
+        <script id="categTemplate" type="text/template">
+                <form id="edit-form">
+                    <table class="table"> <!-- Таблиця -->
+                        <thead>
+                            <tr>
+                                <% if (!parent) { %>
+                                <th colspan="7"><input id="name" name="name" value="<%= name %>" type="text" />
+                                <br />href:<input id="href" name="href" value="<%= href %>" type="text" /></th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                              <tr>
+                                <% if (parent) {%>
+                                    <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
+                                    <br />Href:<input id="href" name="href" value="<%= href %>" type="text" /></td>
+                                    <td><input id="name" name="name" value="<%= name %>" type="text" /></td>
+                                <% } else { %>
+                                    <td><input id="codeID" name="codeID" value="<%= codeID %>" type="text" />
+                                    <td><input id="_name" name="_name" value="<%= _name %>" type="text" /></td>
+                                    <td>background:<br /><img src="<%= img %>" /><br /><input id="img" name="img" value="<%= img %>" type="file" accept="image/jpg, image/png" /></td>
+                                <% } %>
+                                <td>Фото:<br /><img src="<%= photo %>" /><br /><input id="photo" name="photo" type="file" accept="image/jpg, image/png" /></td>
+                                <% if (sort) { %>
+                                <td><input id="sort" name="sort" value='<%= sort %>' type="text" /></td>
+                                <% } %>
+                                <td><input id="harvest" name="harvest" value="<%= harvest %>" type="text" /></td>
+                                <td><input id="date" name="date" value="<%= date %>" type="text" /></td>
+                                <td><input id="cost" name="cost" value="<%= cost %>" type="text" /></td>
+                              </tr>
+                        </tbody>
+                    </table>
+                    <button id="save-btn">Save</button>
+                    <% if (_id == "5873b8ebf36d2872530dfeac" || _id == "586e6219f36d282f8ecbb80a") { %>
+                    <% } else { %>
+                    <button id="delete-btn">Delete</button>
+                    <% } %>
+                </form>
+        </script>
+    </body>
+</html>

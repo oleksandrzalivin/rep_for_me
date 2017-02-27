@@ -1,5 +1,4 @@
 # cat .gitignore
 # exclude
 /node_modules
-/produkty_web-server-copy
 /mongo

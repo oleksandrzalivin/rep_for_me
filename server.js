@@ -1,11 +1,10 @@
 var express = require('express'),
-    handlebars = require('handlebars'),
-    layouts = require('handlebars-layouts'),
-    fs = require('fs');
+    exphbs  = require('express-handlebars'),
+    bodyParser = require('body-parser');
 
-// Register layouts` helpers 
-handlebars.registerHelper(layouts(handlebars));
+var app = express();
 
+<<<<<<< HEAD
 var app = express(),
     exphbs  = require('express-handlebars');
 
@@ -31,6 +30,12 @@ var dataIndex = require('./public/data_json/index.json'),
     data021 = require('./public/data_json/021.json'),
     data022 = require('./public/data_json/022.json'),
     data023 = require('./public/data_json/023.json');
+=======
+app.use( bodyParser.json() );       // для поддержки JSON
+app.use(bodyParser.urlencoded({     // для поддержки URL кодировки
+  extended: true
+}));
+>>>>>>> backbone
 
 // create instance of hbs-expr with specify propertys
 var hbs = exphbs.create({
@@ -39,47 +44,20 @@ var hbs = exphbs.create({
     defaultLayout: false
 });
 
-// Встановлення маршруту до шаблонів
+// маршрут до шаблонів
 app.set('views', './views');
-//Встановлення корневого шаблону і обробщика шаблонів
+// шаблонізатор
 // Register `hbs` as our view engine using its bound `engine()` function.
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-/*Вказано шлях до статичних файлів*/
+// шлях до статичних файлів
 app.use(express.static('./public'));
 
-//Маршрутизація сторінок, запаковування даними із джейсонів ======
-var renDer = function(template, data){
-    return function(req, res){
-        //додаємо дані для БАРУ(меню з права з пустими опціями)
-        data.bar = dataBar.bar;
-        res.render(template, data)
-    }
-};
-app.get('/', renDer('index', dataIndex));
-app.get('/fruit', renDer('index', dataFruit));
-app.get('/vegetable', renDer('index', dataVegetable));
-app.get('/spice', renDer('index', dataSpice));
-app.get('/001', renDer('index', data001));
-app.get('/002', renDer('index', data002));
-app.get('/003', renDer('index', data003));
-app.get('/011', renDer('index', data011));
-app.get('/012', renDer('index', data012));
-app.get('/013', renDer('index', data013));
-app.get('/021', renDer('index', data021));
-app.get('/022', renDer('index', data022));
-app.get('/023', renDer('index', data023));
+// Маршрутизація сторінок, запаковування даними із DB
+require('./routes')(app);
 
-//Повідомлення для неіснуючих маршрутів
-app.use(function(req, res, next) {
-        res.status(404).render('404', {
-            title:'Not found',
-            text: 'Sorry, cant find that!'
-        })
-});
-
-//Локальний хост на порту
+// Локальний хост на порту
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+    console.log('Example app listening on port 3000!')
 });
