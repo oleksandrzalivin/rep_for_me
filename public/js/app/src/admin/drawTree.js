@@ -1,6 +1,35 @@
 define(function() {
+    // відкривання-закривання вузлів
+    if(!window.tree_toggle) {
+        window.tree_toggle = function(event) {
+            event = event || window.event;
+            var clickedElem = event.target || event.srcElement;
+
+            if (!hasClass(clickedElem, 'Expand')) {
+                return; // клик не там
+            }
+
+            // Node, на который кликнули
+            var node = clickedElem.parentNode;
+            if (hasClass(node, 'ExpandLeaf')) {
+                return; // клик на листе
+            }
+
+            // определить новый класс для узла
+            var newClass = hasClass(node, 'ExpandOpen') ? 'ExpandClosed' : 'ExpandOpen';
+            // заменить текущий класс на newClass
+            // регексп находит отдельно стоящий open|close и меняет на newClass
+            var re =  /(^|\s)(ExpandOpen|ExpandClosed)(\s|$)/;
+            node.className = node.className.replace(re, '$1' + newClass + '$3');
+
+            function hasClass(elem, className) {
+            return new RegExp("(^|\\s)" + className+"(\\s|$)").test(elem.className);
+            }
+        }
+    }
+    
     // create a tree from JSON
-    return function fu_tree(categ) {
+    function fu_tree(categ) {
         // головний кореневий вузол
         var containerStr = 	'<ul class="Container">' +
                             '<li class="Node IsLast IsRoot ExpandOpen">' +
@@ -44,32 +73,6 @@ define(function() {
             return str + "</ul>";
         }
         return containerStr + tree(categ) + "</li></ul>";
-        
-        // відкривання-закривання вузлів
-        window.tree_toggle = function(event) {
-            event = event || window.event;
-            var clickedElem = event.target || event.srcElement;
-
-            if (!hasClass(clickedElem, 'Expand')) {
-                return; // клик не там
-            }
-
-            // Node, на который кликнули
-            var node = clickedElem.parentNode;
-            if (hasClass(node, 'ExpandLeaf')) {
-                return; // клик на листе
-            }
-
-            // определить новый класс для узла
-            var newClass = hasClass(node, 'ExpandOpen') ? 'ExpandClosed' : 'ExpandOpen';
-            // заменить текущий класс на newClass
-            // регексп находит отдельно стоящий open|close и меняет на newClass
-            var re =  /(^|\s)(ExpandOpen|ExpandClosed)(\s|$)/;
-            node.className = node.className.replace(re, '$1' + newClass + '$3');
-
-            function hasClass(elem, className) {
-            return new RegExp("(^|\\s)" + className+"(\\s|$)").test(elem.className);
-            }
-        }
     }
+    return fu_tree;
 });
